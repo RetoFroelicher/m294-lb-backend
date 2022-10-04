@@ -3,6 +3,7 @@ import { Server, IncomingMessage, ServerResponse } from 'http'
 import { error, parseId } from '../helpers'
 import { addTaskSchema, updateTaskSchema } from '../schemas'
 import * as taskService from '../task_service'
+import type { Task } from '../task_service'
 
 export default function setup (fastify: FastifyInstance) {
   fastify.route(listTasks)
@@ -43,7 +44,7 @@ const deleteTask: RouteOptions<Server, IncomingMessage, ServerResponse, { Params
   }
 }
 
-const createTask: RouteOptions<Server, IncomingMessage, ServerResponse, { Body: { title: string, completed?: boolean } }> = {
+const createTask: RouteOptions<Server, IncomingMessage, ServerResponse, { Body: Omit<Task, "id"> }> = {
   method: 'POST',
   url: '/tasks',
   schema: addTaskSchema,
@@ -57,11 +58,7 @@ const createTask: RouteOptions<Server, IncomingMessage, ServerResponse, { Body: 
   }
 }
 
-const updateTask: RouteOptions<Server, IncomingMessage, ServerResponse, {
-  Body: {
-    id: string, title: string, completed?: boolean
-  }
-}> = {
+const updateTask: RouteOptions<Server, IncomingMessage, ServerResponse, { Body: Task }> = {
   method: 'PUT',
   url: '/tasks',
   schema: updateTaskSchema,

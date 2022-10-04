@@ -1,3 +1,4 @@
+const fs = require('fs')
 
 export interface Task {
   id: number
@@ -27,6 +28,7 @@ export function getAllTasks (): Task[] {
 
 export function deleteTaskById (id: number | undefined) {
   tasks = tasks.filter(task => task.id != id)
+	persistTasksToFile()
 }
 
 export function getNextId (): number {
@@ -47,6 +49,7 @@ export function addTask ({ title, completed }: {title?: string, completed?: bool
     completed: completed === true || completed as unknown as string === 'true'
   }
   tasks.push(task)
+	persistTasksToFile()
   return task
 }
 
@@ -61,6 +64,11 @@ export function updateTask ({ id, title, completed }: Partial<Task>): Task | und
   }
 
   task.completed = completed === true || completed as unknown as string === 'true'
+	persistTasksToFile()
 
   return task
+}
+
+function persistTasksToFile(file = 'data.json') {
+	fs.writeFile(file, JSON.stringify(tasks), () => {})
 }
