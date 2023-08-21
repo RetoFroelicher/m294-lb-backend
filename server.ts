@@ -13,7 +13,7 @@ setupPlainEndpoint(fastify)
 setupCookieEndpoint(fastify)
 setupJwtEndpoint(fastify)
 
-fastify.register(cors, {
+void fastify.register(cors, {
   origin: true,
   allowedHeaders: ['Content-Type', 'Authorization', 'Credentials'],
   methods: ['GET', 'PUT', 'POST', 'DELETE'],
@@ -21,10 +21,10 @@ fastify.register(cors, {
 })
 
 fastify.get('/', async (request, response) => {
-  response.type('text/html').send(readFileSync('index.html'))
+  void response.type('text/html').send(readFileSync('index.html'))
 })
 
-fastify.listen({ port: 3000 }, function (error) {
+fastify.listen({ host: '0.0.0.0', port: 3000 }, function (error) {
   if (error != null) {
     fastify.log.error(error)
     process.exit(1)
